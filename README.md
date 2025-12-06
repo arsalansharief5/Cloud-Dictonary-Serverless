@@ -78,6 +78,6 @@ I wanted to create a cloud project that is practical and meaningful, while showi
 
 3. Search suggestions
 
-4. Logging & monitoring with CloudWatch
+4. Logging and monitoring with CloudWatch
 
 5. CI/CD integration
