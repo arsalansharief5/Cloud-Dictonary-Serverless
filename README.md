@@ -1,83 +1,106 @@
-# Cloud-Dictonary
-The Cloud Dictionary App is a fully serverless application built using AWS Amplify, Lambda, API Gateway, and DynamoDB. The project allows users to search for word meanings through a simple web interface, where all data is stored and managed in the cloud.
+Cloud Dictionary
 
-The frontend is deployed using AWS Amplify Hosting, providing a fast and scalable UI. When a user searches for a word, the request is sent to Amazon API Gateway, which triggers an AWS Lambda function. The Lambda function processes the request, retrieves the word definition from DynamoDB, and returns it to the frontend. Users can also add new words and meanings, enabling dynamic expansion of the dictionary.
+A fully serverless dictionary app hosted on AWS Amplify, with backend powered by AWS Lambda, API Gateway, and DynamoDB.
+Search for any word and get its meaning instantly — all in the cloud, no servers to manage.
 
-This project demonstrates how to combine multiple AWS services to create a real-world, cost-efficient serverless application with zero-maintenance infrastructure. It highlights key concepts such as API development, event-driven computation, NoSQL database design, IAM roles, and cloud deployment workflows.
+⸻
 
-The Cloud Dictionary App is cloud-native application using AWS serverless technologies while creating a functional, scalable, and user-friendly web application.
-What This Project Does
+<<<<About the Project>>>>
 
+Cloud Dictionary demonstrates a modern cloud-native workflow:
+• Static frontend hosted on AWS Amplify
+• Backend API using API Gateway + Lambda (Python)
+• DynamoDB stores words and definitions
+• Fully serverless and scalable
 
+⸻
 
+<<<<Features>>>>
+• Search for any word
+• Fully serverless backend
+• DynamoDB stores dictionary entries
+• Frontend hosted on AWS Amplify
 
+⸻
 
-About This Project:
+<<<<Architecture Overview>>>>
 
+Browser →  AWS Amplify  → API Gateway → Lambda → DynamoDB
 
+Components:
+• Frontend: Static HTML/CSS/JS hosted on Amplify
+• API Gateway: HTTP API exposing /dictionary?word=xyz
+• Lambda Function (Python): Reads definitions from DynamoDB
+• DynamoDB: Stores words and their meanings
 
-<<<<<<<- The app lets users ->>>>>>>
+⸻
 
-1. Search for word meanings
+<<<<How It Works>>>>
 
-2. Add new words and definitions
+1. User types a word in the Amplify-hosted frontend
+2. Frontend calls API Gateway endpoint
+3. API Gateway triggers Lambda function
+4. Lambda fetches word from DynamoDB
+5. Definition returned as JSON
+6. Frontend displays the result
 
-3. Access everything through a clean cloud-hosted web interface
+⸻
 
+<<<<Tech Stack>>>>
+• Frontend:-> HTML, CSS, JavaScript
+• Hosting:-> AWS Amplify
+• API:-> AWS API Gateway (HTTP API)
+• Backend:-> AWS Lambda (Python)
+• Database:-> Amazon DynamoDB
 
+⸻
 
+<<<<Lambda Function (Python)>>>>
+import json
+import boto3
 
-<<<<<- How it works ->>>>>
+dynamo = boto3.resource("dynamodb")
+table = dynamo.Table("Dictionary")
 
-1. The frontend is hosted using AWS Amplify.
+def lambda_handler(event, context):
+word = event.get("queryStringParameters", {}).get("word")
 
-2. When you search a word, the browser sends the request to API Gateway.
+if not word:
+return {"statusCode": 400, "body": json.dumps({"error": "Missing word"})}
 
-3. API Gateway triggers a Lambda function, which fetches the meaning from DynamoDB.
+try:
+response = table.get_item(Key={"word": word})
 
-4. The result is sent back to the user instantly.
+if "Item" not in response:
+return {"statusCode": 404, "body": json.dumps({"definition": None})}
 
+return {"statusCode": 200, "body": json.dumps(response["Item"])}
+except Exception as e:
+return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
 
+⸻
 
-<<<<<- Tech Stack ->>>>>
+<<<<Current Status>>>>
+• Fully serverless dictionary app
+• Frontend hosted on AWS Amplify
+• Backend: API Gateway → Lambda → DynamoDB
+• CORS configured for smooth frontend-backend communication
+• Works instantly on search queries
 
-1. AWS Amplify – Frontend hosting
+⸻
 
-2. AWS Lambda – Backend logic
+<<<<Future Enhancements>>>>
+• Add multiple definitions per word
+• Add pronunciation/audio
+• Add user login via Cognito
+• CI/CD deployment with Amplify auto-sync
+• CloudFront for global caching 
 
-3. API Gateway – Creates the REST API
+⸻
 
-4. DynamoDB – Stores words & meanings
+<<<<Contributing>>>>
 
-5. JavaScript / HTML / CSS – Simple client UI
+>>Open issues for suggestions or bugs.
 
+⸻
 
-
-
-<<<<<- Why I built this ->>>>>
-
-I wanted to create a cloud project that is practical and meaningful, while showing how different AWS services connect to form a complete full-stack application. This project helped me learn:
-
-1. How serverless apps are structured
-
-2. How APIs work with Lambda
-
-3. How to store and fetch data from DynamoDB
-
-4. How to deploy a real app using Amplify
-
-
-
-
-
-<<<<<- Features I wll add later ->>>>>
-
-1. User authentication
-
-2. Update/Delete words
-
-3. Search suggestions
-
-4. Logging and monitoring with CloudWatch
-
-5. CI/CD integration
